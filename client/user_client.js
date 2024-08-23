@@ -6,6 +6,6 @@ const user_client = new TwitterApi({
     appSecret: process.env.APP_SECRET,
     accessToken: process.env.ACCESS_TOKEN,
     accessSecret: process.env.ACCES_SECRET,
-});
+  });
 
-module.exports = user_client;
+  module.exports = user_client;
