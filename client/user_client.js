@@ -1,7 +1,7 @@
 require('dotenv').config()
-const {TwitterApi} = require('twitter-api-v2');
+const {Client} = require('twitter-api-sdk');
 
-const user_client = new TwitterApi({
+const user_client = new Client({
     appKey: process.env.APP_KEY,
     appSecret: process.env.APP_SECRET,
     accessToken: process.env.ACCESS_TOKEN,
