@@ -4,7 +4,7 @@ const openai = require('./client/openai.js');
 
 const {ETwitterStreamEvent} = require('twitter-api-sdk');
   
-const nicknames = ["IbaiLlanos", "TheGrefg", "elonmusk"];
+const nicknames = ["Cristiano", "IbaiLlanos", "TheGrefg", "elonmusk"];
 
 async function user_data(nick_name) {
   try {
@@ -47,35 +47,29 @@ async function answerTweet(tweetId, tweetText) {
   try {
     let response_text = '';
     // creamos el prompt inicial "one show prompt" con un chat de ejemplo para dar contexto a openai
-    const one_shot_prompt = 'Twitter Bot: Preguntame algo sobre Javascript. '+
-    'Yo: Claro, Cuando se creó el lenguaje javascript? '+
-    'Twitter Bot: El lenguaje se creó en 1995. '+
-    'Yo: '+ tweetText;
+    const one_shot_prompt = 'Contexto: Eres un usuario de twitter con mucho humor, contesta al siguiente tweet: '+ tweetText;
 
     try{  
 
         // gpt-4o-mini
         const completion = await openai.chat.completions.create({
-            model: 'gpt-3o-mini',
+            model: 'davinci-002',
             prompt: one_shot_prompt,
             temperature: 0.5,
             max_tokens: 250,
-            top_p: 1.0,
-            stop: ["Yo:"]
+            top_p: 1.0
         });
         response_text = completion.data.choices[0].text
-
-        //dall-e
-        // const response = await openai.createImage({
-        //     prompt: clear_text,
-        //     n: 1,
-        //     size: '1024x1024'
-        // });
-        // response_text = response.data.data[0].url;
         
     }catch(error){
         console.log(error);
     }
+
+    if (!response_text || response_text.trim() === '') {
+      console.log('No se generó una respuesta adecuada.');
+      return;
+    }
+
 
     // Answer tweet
     let tweet_response = await dev_client.tweets.createTweet({
@@ -91,7 +85,7 @@ async function answerTweet(tweetId, tweetText) {
 
 
 async function main() {
-  user_data(nicknames[1]).then(({ id: tweetId, text: tweetText }) => {
+  user_data(nicknames[0]).then(({ id: tweetId, text: tweetText }) => {
     if (tweetId) {
       console.log("Tweet ID:", tweetId);
       console.log("Tweet Text:", tweetText);
